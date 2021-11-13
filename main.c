@@ -8,15 +8,13 @@
 #define ITERATIONS 10000
 
 void eat(){
-    usleep(1);
 }
 
 void think(){
-    usleep(1);
 }
 
 void *party(void* args){
-    int *id = (int*)&args[0];
+    int *id = (int*)&((char**)args)[0];
     int *philosophers_number = (int*)(((char**)args) + 4);
     pthread_mutex_t *chopsticks = (pthread_mutex_t*)(((char*)args) + 8);
     int left = *id;
@@ -50,15 +48,26 @@ int main(int argc, char* argv[]) {
         if(!chopsticks) return EXIT_FAILURE;
         for(int i = 0; i < philosophers_number; i++) pthread_mutex_init(&chopsticks[i], NULL);
         pthread_t *tab = (pthread_t*)malloc(sizeof(pthread_t)*philosophers_number);
+        if(!tab) return EXIT_FAILURE;
+        char* ads[4];
         for(int i = 0; i < philosophers_number; i++) {
             char **array = (char **) malloc(sizeof(int) * 2 + sizeof(pthread_mutex_t) * philosophers_number);
+            if(!array) return EXIT_FAILURE;
             *(int*)&array[0] = i;
             *(int*)&array[4] = philosophers_number;
             array[8] = (char *) chopsticks;
             pthread_create(&tab[i], NULL, party, (void*)array);
+            ads[i] = (void*)array;
         }
         sleep(1);
         printf("OK\n");
+        for(int i = 0; i < philosophers_number; i++) {
+            pthread_detach(tab[i]);
+            pthread_mutex_destroy(&chopsticks[i]);
+            free(ads[i]);
+        }
+        free(tab);
+        free(chopsticks);
     }
     return EXIT_SUCCESS;
 }

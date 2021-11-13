@@ -6,42 +6,41 @@
 #include <semaphore.h>
 
 #define PHILOSOPHERS 4
-int maxEat = 100;
-int minEat = 1;
+
 pthread_t phil[PHILOSOPHERS];
 pthread_mutex_t chopsticks[PHILOSOPHERS];
 
 void eat(int id){
-    int end  = rand() % (maxEat + 1 - minEat) + minEat;
-    for(int i = 0; i < end ; i++){
-        //printf("Philosophe %d mange\n", id);
-    }
+    int maxEat = 10000;
+    int minEat = 1;
+    int time  = rand() % (maxEat + 1 - minEat) + minEat;
+    printf("Philosopher %d eat\n", id);
+    int i = 0;
+    while(i<time) i++;
 }
 
 void * party(void* arg){
     int *id =(int*)arg;
-    printf("Enter %d\n", *id);
     int left = *id;
     int right = (left + 1) % PHILOSOPHERS;
-    int PART = 100;
+    int PART = 10000;
     while(PART >= 0){
-        //printf("Philosophe %d pense\n", *id);
+        printf("Philosopher %d thinks\n", *id);
         if(left < right) {
             pthread_mutex_lock(&chopsticks[left]);
             pthread_mutex_lock(&chopsticks[right]);
+            printf("Philosopher %d locked chopsticks %d - %d\n", *id, left, right);
         }else{
             pthread_mutex_lock(&chopsticks[right]);
             pthread_mutex_lock(&chopsticks[left]);
+            printf("Philosopher %d locked chopsticks %d - %d\n", *id, left, right);
         }
         eat(*id);
-        printf("Philo %d leaves chopsticks \n", *id);
         pthread_mutex_unlock(&chopsticks[left]);
         pthread_mutex_unlock(&chopsticks[right]);
-        usleep(100);
+        printf("Philosopher %d left chopsticks %d - %d\n", *id, left, right);
         PART-=1;
-        printf("Part = %d\n", PART);
     }
-
     return NULL;
 }
 

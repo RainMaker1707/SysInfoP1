@@ -9,18 +9,35 @@ EXEC_PATH = 'built/main'
 TEST = `ls | grep $(DIR_NAME) | wc -w | xargs`
 
 # -----------------------------------------------
+#                Arguments
+# -----------------------------------------------
+
+N = 4
+
+
+# -----------------------------------------------
 #                Parameters
 # -----------------------------------------------
 ifndef VERBOSE
 .SILENT: # true is silent by default, set to false to make it verbose
 endif
+.DEFAULT_GOAL: all
+
 # -----------------------------------------------
 #                 Functions
 # -----------------------------------------------
+
+help:
+	echo "make:\t\t\trun and build"
+	echo "make run:\t\tbuild file if it is not and then run"
+	echo "make build:\t\tonly build the executable file"
+	echo "make clean:\t\tremove the built files if there is"
+	echo "make benchmark: coming soon"
+
 all: build run # default 'make' command
 
 clean:
-	@if [ $(TEST) = 1 ];\
+	@if [ $(TEST) == 1 ];\
 	then rm -r $(DIR_NAME);\
 	fi
 
@@ -35,7 +52,7 @@ run:
 	@if [ $(TEST) == 0 ];\
 	then make build;\
 	fi
-	-./$(EXEC_PATH)
+	-./$(EXEC_PATH) $(N)
 
 
 benchmark:

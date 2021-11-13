@@ -5,50 +5,51 @@
 #include <unistd.h>
 #include <semaphore.h>
 
-#define PHILOSOPHES 4
-int PART=10000; // number of portion to eat
-pthread_t phil[PHILOSOPHES];
-pthread_mutex_t baguette[PHILOSOPHES];
+#define PHILOSOPHERS 4
+int maxEat = 100;
+int minEat = 1;
+pthread_t phil[PHILOSOPHERS];
+pthread_mutex_t chopsticks[PHILOSOPHERS];
 
 void eat(int id){
-    for(int i = 0; i < rand()%10; i++){
-        printf("Philosophe %d mange\n", id);
-        PART-=1;
+    int end  = rand() % (maxEat + 1 - minEat) + minEat;
+    for(int i = 0; i < end ; i++){
+        //printf("Philosophe %d mange\n", id);
     }
 }
 
-void * philo(void* arg){
+void * party(void* arg){
     int *id =(int*)arg;
     printf("Enter %d\n", *id);
     int left = *id;
-    int right = (left + 1) % PHILOSOPHES;
+    int right = (left + 1) % PHILOSOPHERS;
+    int PART = 100;
     while(PART >= 0){
-        printf("Philosophe %d pense\n", *id);
-        if(left < right){
-            printf("Philo %d take baguette left\n", *id);
-            pthread_mutex_lock(&baguette[left]);
-            printf("Philo %d take baguette right\n", *id);
-            pthread_mutex_lock(&baguette[right]);
+        //printf("Philosophe %d pense\n", *id);
+        if(left < right) {
+            pthread_mutex_lock(&chopsticks[left]);
+            pthread_mutex_lock(&chopsticks[right]);
         }else{
-            printf("Philo %d take baguette right\n", *id);
-            pthread_mutex_lock(&baguette[right]);
-            printf("Philo %d take baguette left\n", *id);
-            pthread_mutex_lock(&baguette[left]);
+            pthread_mutex_lock(&chopsticks[right]);
+            pthread_mutex_lock(&chopsticks[left]);
         }
         eat(*id);
-        printf("Philo %d leaves baguette left\n", *id);
-        pthread_mutex_unlock(&baguette[left]);
-        printf("Philo %d leaves baguette right\n", *id);
-        pthread_mutex_unlock(&baguette[right]);
+        printf("Philo %d leaves chopsticks \n", *id);
+        pthread_mutex_unlock(&chopsticks[left]);
+        pthread_mutex_unlock(&chopsticks[right]);
+        usleep(100);
+        PART-=1;
+        printf("Part = %d\n", PART);
     }
+
     return NULL;
 }
 
 
 int main() {
-    int *ids = malloc(sizeof(int)*4); //malloc to share variables
+    int *ids = (int*)malloc(sizeof(int)*PHILOSOPHERS); //malloc to share variables
     if(!ids)return EXIT_FAILURE;
-    for(int i= 0; i<PHILOSOPHES; i++) ids[i] = i;
-    pthread_t tab[PHILOSOPHES];
-    for(int i=0; i<PHILOSOPHES; i++) pthread_create(&tab[i], NULL, philo, (void*)&(ids[i]));
+    for(int i= 0; i<PHILOSOPHERS; i++) ids[i] = i;
+    pthread_t *tab = (pthread_t*)malloc(sizeof(pthread_t)*PHILOSOPHERS);
+    for(int i=0; i<PHILOSOPHERS; i++) pthread_create(&tab[i], NULL, party, (void*)&(ids[i]));
 }

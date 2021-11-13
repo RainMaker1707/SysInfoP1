@@ -1,12 +1,12 @@
 # -----------------------------------------------
 #                Variables
 # -----------------------------------------------
-STD = '-std=c99'       # Choose of std option
-MAIN = 'main.c'        # to compile file
-EXEC = 'main'          # executable name
-DIR_NAME = 'built' # all build files go here
+STD       = '-std=c99'       # Choose of std option
+MAIN      = 'main.c'        # to compile file
+EXEC      = 'main'          # executable name
+DIR_NAME  = 'built' # all build files go here
 EXEC_PATH = 'built/main'
-TEST = `ls | grep $(DIR_NAME) | wc -w | xargs`
+TEST      = `ls | grep $(DIR_NAME) | wc -w | xargs`
 
 # -----------------------------------------------
 #                Arguments
@@ -27,14 +27,14 @@ endif
 #                 Functions
 # -----------------------------------------------
 
+all: build run # default 'make' command
+
 help:
 	echo "make:\t\t\trun and build"
 	echo "make run:\t\tbuild file if it is not and then run"
 	echo "make build:\t\tonly build the executable file"
 	echo "make clean:\t\tremove the built files if there is"
 	echo "make benchmark: coming soon"
-
-all: build run # default 'make' command
 
 clean:
 	@if [ $(TEST) == 1 ];\

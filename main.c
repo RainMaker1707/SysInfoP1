@@ -5,50 +5,60 @@
 #include <unistd.h>
 #include <semaphore.h>
 
-#define PHILOSOPHERS 4
+#define ITERATIONS 10000
 
-pthread_t phil[PHILOSOPHERS];
-pthread_mutex_t chopsticks[PHILOSOPHERS];
-
-void eat(int id){
-    int maxEat = 10000;
-    int minEat = 1;
-    int time  = rand() % (maxEat + 1 - minEat) + minEat;
-    printf("Philosopher %d eat\n", id);
-    int i = 0;
-    while(i<time) i++;
+void eat(){
+    usleep(1);
 }
 
-void * party(void* arg){
-    int *id =(int*)arg;
+void think(){
+    usleep(1);
+}
+
+void *party(void* args){
+    int *id = (int*)&args[0];
+    int *philosophers_number = (int*)(((char**)args) + 4);
+    pthread_mutex_t *chopsticks = (pthread_mutex_t*)(((char*)args) + 8);
     int left = *id;
-    int right = (left + 1) % PHILOSOPHERS;
-    int PART = 10000;
-    while(PART >= 0){
-        printf("Philosopher %d thinks\n", *id);
-        if(left < right) {
-            pthread_mutex_lock(&chopsticks[left]);
-            pthread_mutex_lock(&chopsticks[right]);
-            printf("Philosopher %d locked chopsticks %d - %d\n", *id, left, right);
-        }else{
-            pthread_mutex_lock(&chopsticks[right]);
-            pthread_mutex_lock(&chopsticks[left]);
-            printf("Philosopher %d locked chopsticks %d - %d\n", *id, left, right);
-        }
-        eat(*id);
+    int right = (*id + 1) % *philosophers_number;
+    for(int i=0; i < ITERATIONS; i++) {
+        think();
+        // lock chopsticks
+        pthread_mutex_lock(&chopsticks[left]);
+        pthread_mutex_lock(&chopsticks[right]);
+        eat();
+        // leave chopsticks
         pthread_mutex_unlock(&chopsticks[left]);
         pthread_mutex_unlock(&chopsticks[right]);
-        printf("Philosopher %d left chopsticks %d - %d\n", *id, left, right);
-        PART-=1;
     }
+    printf("id: %d, philo_n: %d\n", *id, *philosophers_number);
     return NULL;
 }
 
-
-int main() {
-    int *ids = (int*)malloc(sizeof(int)*PHILOSOPHERS); //malloc to share variables
-    if(!ids)return EXIT_FAILURE;
-    for(int i= 0; i<PHILOSOPHERS; i++) ids[i] = i;
-    pthread_t *tab = (pthread_t*)malloc(sizeof(pthread_t)*PHILOSOPHERS);
-    for(int i=0; i<PHILOSOPHERS; i++) pthread_create(&tab[i], NULL, party, (void*)&(ids[i]));
+int main(int argc, char* argv[]) {
+    if(argc != 2) {
+        printf("You must provide only one argument N number of philosophers");
+        return EXIT_FAILURE;
+    }
+    if(argv[1]){
+        int philosophers_number = (int)strtol(argv[1], &argv[2], 10);
+        if(philosophers_number <= 0) {
+            printf("N must be positive integer");
+            return EXIT_FAILURE;
+        }
+        pthread_mutex_t *chopsticks = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t)*philosophers_number);
+        if(!chopsticks) return EXIT_FAILURE;
+        for(int i = 0; i < philosophers_number; i++) pthread_mutex_init(&chopsticks[i], NULL);
+        pthread_t *tab = (pthread_t*)malloc(sizeof(pthread_t)*philosophers_number);
+        for(int i = 0; i < philosophers_number; i++) {
+            char **array = (char **) malloc(sizeof(int) * 2 + sizeof(pthread_mutex_t) * philosophers_number);
+            *(int*)&array[0] = i;
+            *(int*)&array[4] = philosophers_number;
+            array[8] = (char *) chopsticks;
+            pthread_create(&tab[i], NULL, party, (void*)array);
+        }
+        sleep(1);
+        printf("OK\n");
+    }
+    return EXIT_SUCCESS;
 }

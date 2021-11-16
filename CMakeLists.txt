@@ -3,4 +3,4 @@ project(sysInfoP1 C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(sysInfoP1 main.c)
+add_executable(sysInfoP1 philosophers.c buffer.c rw.c)

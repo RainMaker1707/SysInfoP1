@@ -24,10 +24,10 @@ TEST             = `ls | grep $(DIR_NAME) | wc -w | xargs`
 # -----------------------------------------------
 
 N = 4 # number of philosophers
+C = 4 # number of consumers
 P = 2 # number of producers
-C = 2 # number of consumers
 W = 2 # number of writers
-R = 2 # number of readers
+R = 4 # number of readers
 
 # -----------------------------------------------
 #                Parameters

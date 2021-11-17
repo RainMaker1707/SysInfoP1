@@ -5,12 +5,15 @@
 #define ITERATIONS 10000
 
 void eat(){
+    // emulated eating with no delay
 }
 
 void think(){
+    // emulated thinking with no delay
 }
 
 void *party(void* voidArg){
+    // get and cast arg
     char** args = (char**)voidArg;
     int *id = (int*)args[0];
     int *N = (int*)args[1];
@@ -18,6 +21,8 @@ void *party(void* voidArg){
     for(int i = 0; i < *N; i++){
         chopsticks[i] = (pthread_mutex_t *)args[2+i];
     }
+
+    // syllabus code with no deadlock
     for(int i = 0; i < ITERATIONS; i++){
         int left = *id;
         int right = (*id+1) % *N;
@@ -34,6 +39,7 @@ void *party(void* voidArg){
         pthread_mutex_unlock(chopsticks[right]);
         pthread_yield_np();
     }
+    // free of arguments
     free(args);
     return NULL;
 }
@@ -44,23 +50,30 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
     if(argv[1]){
-        int philosophers_number = (int)strtol(argv[1], &argv[2], 10);
+        // check if threads number is in the range [1, 64[
+        int philosophers_number = (int)strtol(argv[1], &argv[2] - 1, 10);
         if(philosophers_number <= 1 || philosophers_number > 64) {
             printf("N must be positive integer greater than 1 and less than 64\n");
             return EXIT_FAILURE;
         }
+        // definition of mutex and threads
         pthread_mutex_t chopsticks[philosophers_number];
         pthread_t thread[philosophers_number];
+
+        // malloc all shared variables
         int *pn = malloc(sizeof(int));
         if(!pn) return EXIT_FAILURE;
         int *ids = malloc((sizeof(int)*philosophers_number));
         if(!ids) return EXIT_FAILURE;
+        //init variables: pn, ids array and mutex
         *pn = philosophers_number;
         for (int i=0; i < philosophers_number; i++) {
             ids[i] = i;
             pthread_mutex_init(&chopsticks[i], NULL);
         }
+
         for(int i = 0; i < philosophers_number; i++){
+            // make tab of arguments addresses (freed in each thread end)
             char **args = malloc(2 + philosophers_number);
             if(!args) return EXIT_FAILURE;
             args[0] = (char*)&ids[i];
@@ -68,8 +81,12 @@ int main(int argc, char* argv[]) {
             for(int j = 0; j < philosophers_number; j++) args[2+j] = (char*)&(chopsticks[j]);
             pthread_create(&thread[i], NULL, party, (void*)args);
         }
+
+        // wait for all thread to end and then destroy the mutex
         for(int i = 0; i< philosophers_number; i++) pthread_join(thread[i], NULL);
         for(int i = 0; i< philosophers_number; i++) pthread_mutex_destroy(&chopsticks[i]);
+
+        // free malloced variables
         free(pn);
         free(ids);
     }

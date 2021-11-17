@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
-#include <semaphore.h>
+//#include <pthread.h>
+//#include <semaphore.h>
 
 int main(int argc, char* argv[]){
     if(argc != 3){
@@ -18,8 +18,8 @@ int main(int argc, char* argv[]){
     // the next argument
     *producer_number = (int)strtol(argv[1], &argv[2] - 1, 10);
     *consumer_number = (int)strtol(argv[2], &argv[3] - 1, 10);
-    printf("P: %d -- C: %d\n", *producer_number, *consumer_number);
-
+    printf("P: %d -- C: %d\n", *producer_number, *consumer_number);// TODO rm
+    // TODO threading and producer-consumer problem
     // free all malloced variables
     free(producer_number);
     free(consumer_number);

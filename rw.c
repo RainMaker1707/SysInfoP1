@@ -1,13 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
-#include <semaphore.h>
+//#include <pthread.h>
+//#include <semaphore.h>
 
 
 void reader(void* voidArg){
+    char* arg = (char*)voidArg;
+    strcmp(arg, "ae"); // to avoid IDE's warning
 }
 
 void writer(void* voidArg){
+    char* arg = (char*)voidArg;
+    strcmp(arg, "ae"); // to avoid IDE's warning
 }
 
 int main(int argc, char* argv[]){
@@ -31,8 +35,8 @@ int main(int argc, char* argv[]){
     *writer_number = (int)strtol(argv[1], &argv[2] - 1, 10);
     *reader_access = 0;
     *writer_access = 0;
-    printf("R: %d -- W: %d\n", *reader_number, *writer_number);
-
+    printf("R: %d -- W: %d\n", *reader_number, *writer_number); // TODO rm
+    //TODO threading reader-writer problem
     //free all malloced variables
     free(writer_number);
     free(writer_access);

@@ -6,12 +6,10 @@
 
 void reader(void* voidArg){
     char* arg = (char*)voidArg;
-    strcmp(arg, "ae"); // to avoid IDE's warning
 }
 
 void writer(void* voidArg){
     char* arg = (char*)voidArg;
-    strcmp(arg, "ae"); // to avoid IDE's warning
 }
 
 int main(int argc, char* argv[]){

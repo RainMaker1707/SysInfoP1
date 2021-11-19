@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define ITERATIONS 10000
+#define ITERATIONS 100000
 
 void eat(){
     // emulated eating with no delay
@@ -14,7 +14,7 @@ void think(){
 
 void *party(void* voidArg){
     // get and cast arg
-    char** args = (char**)voidArg;
+    void** args = (void**)voidArg;
     int *id = (int*)args[0];
     int *N = (int*)args[1];
     pthread_mutex_t *chopsticks[*N];
@@ -37,7 +37,6 @@ void *party(void* voidArg){
         eat();
         pthread_mutex_unlock(chopsticks[left]);
         pthread_mutex_unlock(chopsticks[right]);
-        pthread_yield_np();
     }
     // free of arguments
     free(args);
@@ -74,11 +73,11 @@ int main(int argc, char* argv[]) {
 
         for(int i = 0; i < philosophers_number; i++){
             // make tab of arguments addresses (freed in each thread end)
-            char **args = malloc(2 + philosophers_number);
+            void **args = malloc((2 + philosophers_number) * sizeof(void*));
             if(!args) return EXIT_FAILURE;
-            args[0] = (char*)&ids[i];
-            args[1] = (char*)pn;
-            for(int j = 0; j < philosophers_number; j++) args[2+j] = (char*)&(chopsticks[j]);
+            args[0] = &ids[i];
+            args[1] = pn;
+            for(int j = 0; j < philosophers_number; j++) args[2+j] = &(chopsticks[j]);
             pthread_create(&thread[i], NULL, party, (void*)args);
         }
 

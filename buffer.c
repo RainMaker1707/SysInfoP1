@@ -15,6 +15,9 @@ void *producer(void* voidArg){
 }
 
 void *consumer(void* voidArg){
+    char** args = (char**)voidArg;
+    int *consumer_number = (int*)args[0];
+    printf("%d\n", *consumer_number);
     return NULL;
 }
 
@@ -61,28 +64,28 @@ int main(int argc, char* argv[]){
     pthread_t consumers[*consumer_number];
     pthread_t producers[*producer_number];
 
-    char** prod_args = malloc(8);
-    prod_args[0] = (char*)producer_number;
-    prod_args[1] = (char*)produced;
-    prod_args[2] = (char*)&producer_m;
-    prod_args[3] = (char*)&buffer_m;
-    prod_args[4] = (char*)&buffer;
-    prod_args[5] = (char*)&empty;
-    prod_args[6] = (char*)&full;
-    prod_args[7] = (char*)producer_index;
+    void** prod_args = malloc(8*sizeof(void*));
+    prod_args[0] = producer_number;
+    prod_args[1] = produced;
+    prod_args[2] = &producer_m;
+    prod_args[3] = &buffer_m;
+    prod_args[4] = &buffer;
+    prod_args[5] = &empty;
+    prod_args[6] = &full;
+    prod_args[7] = producer_index;
     for(int i = 0; i < *producer_number; i++){
         pthread_create(&producers[i], NULL, &producer, (void*)prod_args);
     }
 
-    char** cons_args = malloc(8);
-    cons_args[0] = (char*)&consumer_number;
-    cons_args[1] = (char*)&consumed;
-    cons_args[2] = (char*)&consumer_m;
-    cons_args[3] = (char*)&buffer_m;
-    cons_args[4] = (char*)&buffer;
-    cons_args[5] = (char*)&empty;
-    cons_args[6] = (char*)&full;
-    cons_args[7] = (char*)&consumer_index;
+    void** cons_args = malloc(8*sizeof(void*));
+    cons_args[0] = consumer_number;
+    cons_args[1] = consumed;
+    cons_args[2] = &consumer_m;
+    cons_args[3] = &buffer_m;
+    cons_args[4] = &buffer;
+    cons_args[5] = &empty;
+    cons_args[6] = &full;
+    cons_args[7] = consumer_index;
     for(int i = 0; i < *consumer_number; i++){
         pthread_create(&consumers[i], NULL, &consumer, (void*)cons_args);
     }

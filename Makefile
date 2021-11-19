@@ -43,7 +43,7 @@ SHELL := /bin/bash
 #                 Functions
 # -----------------------------------------------
 
-all: clean build run # default 'make' command with defaults arguments
+all: clean build csv benchmark # default 'make' command with defaults arguments
 
 run: philo buffer rw
 

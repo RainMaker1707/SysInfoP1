@@ -67,21 +67,21 @@ build_philo:
 	@if [ $(TEST) == 0 ];\
 	then mkdir $(DIR_NAME);\
 	fi
-	-gcc -lpthread -O $(PHILO) -o $(PHILO_EXEC) $(STD)
+	-gcc $(PHILO) -o $(PHILO_EXEC) $(STD) -lpthread
 	-mv -f $(PHILO_EXEC) $(EXEC_PHILO_PATH)
 
 build_buffer:
 	@if [ $(TEST) == 0 ];\
 	then mkdir $(DIR_NAME);\
 	fi
-	-gcc -lpthread -O $(BUFFER) -o $(BUFFER_EXEC) $(STD)
+	-gcc $(BUFFER) -o $(BUFFER_EXEC) $(STD) -lpthread
 	-mv -f $(BUFFER_EXEC) $(EXEC_BUFFER_PATH)
 
 build_rw:
 	@if [ $(TEST) == 0 ];\
 	then mkdir $(DIR_NAME);\
 	fi
-	-gcc -lpthread -O $(RW) -o $(RW_EXEC) $(STD)
+	-gcc $(RW) -o $(RW_EXEC) $(STD) -lpthread
 	-mv -f $(RW_EXEC) $(EXEC_RW_PATH)
 
 csv:

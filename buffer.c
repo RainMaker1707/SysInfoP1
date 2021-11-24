@@ -1,17 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <semaphore.h>
-#include <unistd.h>
-
+#include "buffer.h"
 #define SIZE 8
-
-typedef struct param{
-    int *number, *index, *counter;
-    int *buffer;
-    sem_t *empty, *full;
-    pthread_mutex_t *mutex_buf, *mutex_pc;
-}param_t;
 
 void *producer(void* voidArg){
     //TODO

@@ -21,6 +21,6 @@ typedef struct param{
 }param_t;
 
 void* producer(void* voidArg);
-void *consumer(void* voidArg)
+void *consumer(void* voidArg);
 
 #endif //SYSINFOP1_BUFFER_H

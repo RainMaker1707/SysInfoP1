@@ -6,8 +6,9 @@ BUFFER_PATH="csv/buffer.csv"
 RW_PATH="csv/rw.csv"
 CORE=$(grep -c ^processor /proc/cpuinfo)
 
-make clean
+make clean_build
 make build
+
 if [ $(ls | grep csv | wc -l | xargs) == 0 ]
 then mkdir csv
 fi
@@ -40,4 +41,4 @@ do
   done
 done
 
-make clean
+make clean_build

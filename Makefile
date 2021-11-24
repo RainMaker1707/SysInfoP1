@@ -57,7 +57,9 @@ buffer:
 rw:
 	-./$(EXEC_RW_PATH) $(W) $(R)
 
-clean:
+clean: clean_build clean_data
+
+clean_build:
 	@if [ $(TEST) == 1 ];\
 	then rm -r $(DIR_NAME);\
 	fi

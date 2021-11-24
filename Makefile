@@ -85,7 +85,7 @@ build_rw:
 	-mv -f $(RW_EXEC) $(EXEC_RW_PATH)
 
 csv:
-	-echo 'incoming soon!'
+	-./script.sh
 
 benchmark:
 	-echo 'incoming soon!'

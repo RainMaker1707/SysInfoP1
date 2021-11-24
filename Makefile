@@ -18,6 +18,7 @@ EXEC_BUFFER_PATH = 'built/buffer'
 EXEC_RW_PATH     = 'built/rw'
 # test if already built dir exist
 TEST             = `ls | grep $(DIR_NAME) | wc -w | xargs`
+DATA_TEST		 = `ls | grep csv | wc -l | xargs`
 
 # -----------------------------------------------
 #                Arguments
@@ -59,6 +60,11 @@ rw:
 clean:
 	@if [ $(TEST) == 1 ];\
 	then rm -r $(DIR_NAME);\
+	fi
+
+clean_data:
+	@if [ $(DATA_TEST) == 1 ];\
+	then rm -r csv;\
 	fi
 
 build: build_philo build_buffer build_rw

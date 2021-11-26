@@ -23,21 +23,29 @@ do
 done
 
 
-echo "Thread number, compilation time" > ${BUFFER_PATH}
-for (( I=2; I<=CORE*2; I++))
+echo "Thread number, Producer number, Consumer number, compilation time" > ${BUFFER_PATH}
+for (( I=2; I<=CORE; I++))
 do
-  for _ in {1..5}
+  for (( J=2; J<=CORE; J++))
   do
-    /usr/bin/time -o ${BUFFER_PATH} -a -f  "${I}, %e" make buffer P=${I} C=${I} -s
+    for _ in {1..5}
+    do
+      V=$((${I} + ${J}))
+      /usr/bin/time -o ${BUFFER_PATH} -a -f  "${V}, ${I}, ${J},  %e" make buffer P=${I} C=${J} -s
+    done
   done
 done
 
-echo "Thread number, Compilation time" > ${RW_PATH}
-for (( I=2; I<=CORE*2; I++))
+echo "Thread number, Write number, Reader number, Compilation time" > ${RW_PATH}
+for (( I=2; I<=CORE; I++))
 do
-  for _ in {1..5}
+  for (( J=2; J<=CORE; J++))
   do
-    /usr/bin/time -o ${RW_PATH} -a -f  "${I}, %e" make rw W=${I} R=${I} -s
+    for _ in {1..5}
+    do
+      V=$((${I} + ${J}))
+      /usr/bin/time -o ${RW_PATH} -a -f  "${V}, ${I}, ${J}, %e" make rw W=${I} R=${J} -s
+    done
   done
 done
 

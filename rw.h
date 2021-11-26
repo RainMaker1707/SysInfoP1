@@ -10,6 +10,9 @@
 #include <pthread.h>
 #include <semaphore.h>
 
+typedef struct param{
+
+}param_t;
 
 void reader(void* voidArg);
 void writer(void* voidArg);

@@ -41,7 +41,7 @@ int main(int argc, char* argv[]) {
     if(argv[1]){
         // check if threads number is in the range [1, 64[
         int philosophers_number = (int)strtol(argv[1], &argv[2] - 1, 10);
-        if(philosophers_number <= 1 || philosophers_number > 64) {
+        if(philosophers_number <= 1 || philosophers_number > 640) {
             printf("N must be positive integer greater than 1 and less than 64\n");
             return EXIT_FAILURE;
         }
@@ -54,6 +54,7 @@ int main(int argc, char* argv[]) {
 
         for(int i = 0; i < philosophers_number; i++){
             param_t *arg = (param_t*)malloc(sizeof(param_t));
+            if(!arg) return EXIT_FAILURE;
             arg->id = i;
             arg->N = philosophers_number;
             arg->chopsticks = &chopsticks[0];

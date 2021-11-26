@@ -4,7 +4,7 @@
 void *producer(void* voidArg){
     //TODO
     param_t *arg = (param_t*) voidArg;
-    printf("Number: %d, Counter: %d, \n", *arg->number, *arg->counter);
+    //printf("Number: %d, Counter: %d, \n", *arg->number, *arg->counter);
     return NULL;
 }
 
@@ -13,7 +13,7 @@ void *consumer(void* voidArg){
     param_t *arg = (param_t*) voidArg;
     pthread_mutex_lock(arg->mutex_pc);
     *arg->counter = *arg->counter+1;
-    printf("Number: %d, Counter: %d, \n", *arg->number, *arg->counter);
+    //printf("Number: %d, Counter: %d, \n", *arg->number, *arg->counter);
     pthread_mutex_unlock(arg->mutex_pc);
     return NULL;
 }

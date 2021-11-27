@@ -22,7 +22,6 @@ void *producer(void* voidArg){
         pthread_mutex_unlock(arg->mutex_buf);
         sem_post(arg->full);
     }
-    return NULL;
 }
 
 void *consumer(void* voidArg){
@@ -44,7 +43,6 @@ void *consumer(void* voidArg){
         sem_post(arg->free_p);
         while(rand() > RAND_MAX/10000); //consumer work simulation
     }
-    return NULL;
 }
 
 int main(int argc, char* argv[]){
@@ -52,14 +50,11 @@ int main(int argc, char* argv[]){
         printf("You have to pass two arguments at the program.\n First one is the number of producers (int)\n Second one is number of consumers (int)\n");
         return EXIT_FAILURE;
     }
-
     // shared variables
     int buffer[SIZE];
     int producer_number = (int)strtol(argv[1], &argv[2] - 1, 10);
     int consumer_number = (int)strtol(argv[2], &argv[3] - 1, 10);
     int produced, consumed, cons_index, prod_index = 0;
-    printf("P: %d -- C: %d\n", producer_number, consumer_number);// TODO rm
-
     // semaphore and mutexes + init mutexes
     sem_t free_p, full;
     pthread_mutex_t buffer_m, producer_m, consumer_m;

@@ -10,13 +10,14 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 
 
 typedef struct param{
     int *number, *index, *counter;
     int *buffer;
-    sem_t *empty, *full;
+    sem_t *free_p, *full;
     pthread_mutex_t *mutex_buf, *mutex_pc;
 }param_t;
 

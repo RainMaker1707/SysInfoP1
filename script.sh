@@ -6,7 +6,7 @@ BUFFER_PATH="csv/buffer.csv"
 RW_PATH="csv/rw.csv"
 CORE=$(grep -c ^processor /proc/cpuinfo)
 
-make clean_build
+make clean
 make build
 
 if [ $(ls | grep csv | wc -l | xargs) == 0 ]

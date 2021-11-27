@@ -20,7 +20,7 @@ void *producer(void* voidArg){
         arg->buffer[*arg->index] = elem;
         *arg->index = (*arg->index+1) % SIZE;  // index update for next insertion
         pthread_mutex_unlock(arg->mutex_buf);
-        sem_post(arg->full);
+        sem_post(arg->new_elem_sig); // signal new elem
     }
 }
 
@@ -35,12 +35,12 @@ void *consumer(void* voidArg){
         }
         *arg->counter += 1;
         pthread_mutex_unlock(arg->mutex_pc);
-        sem_wait(arg->full);
+        sem_wait(arg->new_elem_sig); // for elem to read
         pthread_mutex_lock(arg->mutex_buf);
         arg->buffer[*arg->index] = elem;
         *arg->index =  (*arg->index+1) % SIZE; // index update for next consummation
         pthread_mutex_unlock(arg->mutex_buf);
-        sem_post(arg->free_p);
+        sem_post(arg->free_p);  // signal free place
         while(rand() > RAND_MAX/10000); //consumer work simulation
     }
 }
@@ -50,16 +50,17 @@ int main(int argc, char* argv[]){
         printf("You have to pass two arguments at the program.\n First one is the number of producers (int)\n Second one is number of consumers (int)\n");
         return EXIT_FAILURE;
     }
+    srand(time(NULL));
     // shared variables
     int buffer[SIZE];
     int producer_number = (int)strtol(argv[1], &argv[2] - 1, 10);
     int consumer_number = (int)strtol(argv[2], &argv[3] - 1, 10);
     int produced, consumed, cons_index, prod_index = 0;
     // semaphore and mutexes + init mutexes
-    sem_t free_p, full;
+    sem_t free_p, elem_sig;
     pthread_mutex_t buffer_m, producer_m, consumer_m;
     sem_init(&free_p, 0, SIZE);
-    sem_init(&full, 0, 0);
+    sem_init(&elem_sig, 0, 0);
     pthread_mutex_init(&buffer_m, NULL);
     pthread_mutex_init(&producer_m, NULL);
     pthread_mutex_init(&consumer_m, NULL);
@@ -76,7 +77,7 @@ int main(int argc, char* argv[]){
     prod_param->counter = &produced;
     prod_param->index = &prod_index;
     prod_param->free_p = &free_p;
-    prod_param->full = &full;
+    prod_param->new_elem_sig = &elem_sig;
     prod_param->mutex_buf = &buffer_m;
     prod_param->mutex_pc = &producer_m;
     for(int i = 0; i < producer_number; i++){
@@ -91,7 +92,7 @@ int main(int argc, char* argv[]){
     cons_param->counter = &consumed;
     cons_param->index = &cons_index;
     cons_param->free_p = &free_p;
-    cons_param->full = &full;
+    cons_param->new_elem_sig = &elem_sig;
     cons_param->mutex_buf = &buffer_m;
     cons_param->mutex_pc = &consumer_m;
     for(int i = 0; i < consumer_number; i++){
@@ -100,12 +101,13 @@ int main(int argc, char* argv[]){
     // wait for all threads end
     for(int i = 0; i < producer_number; i++) pthread_join(producers[i], NULL);
     for(int i = 0; i < consumer_number; i++) pthread_join(consumers[i], NULL);
+    printf("prod: %d, cons %d", *prod_param->counter, *cons_param->counter);
     // garbage collect
     pthread_mutex_destroy(&buffer_m);
     pthread_mutex_destroy(&producer_m);
     pthread_mutex_destroy(&consumer_m);
     sem_destroy(&free_p);
-    sem_destroy(&full);
+    sem_destroy(&elem_sig);
     free(prod_param);
     free(cons_param);
     return EXIT_SUCCESS;

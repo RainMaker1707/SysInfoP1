@@ -13,9 +13,7 @@ void *reader(void* voidArg){
         pthread_mutex_unlock(arg->mutex_rw);
         if(*arg->iteration >= NREAD) return NULL;
         *arg->iteration += 1; // inc after because of reader work is outside the critical path
-        # ifdef DEBUG
-        printf("Iteration Reader: %d\n", *arg->iteration);
-        # endif
+        //printf("Iteration Reader: %d\n", *arg->iteration);
         sem_post(arg->blocker);
         while(rand() > RAND_MAX/10000); // reader work simulation
         *arg->counter -= 1;
@@ -32,15 +30,13 @@ void *writer(void* voidArg){
         if(*arg->counter == 1) sem_wait(arg->blocker);
         pthread_mutex_unlock(arg->mutex_rw);
         sem_wait(arg->heap);
-        while(rand() > RAND_MAX/10000); // Writer work simulation
-        *arg->iteration += 1;
-        # ifdef DEBUG
-        printf("Iteration writer: %d\n", *arg->iteration);
-        # endif
+        //printf("Iteration writer: %d\n", *arg->iteration);
         if(*arg->iteration >= NWRITE) {
             sem_post(arg->heap);
             return NULL;
         }
+        *arg->iteration += 1;
+        while(rand() > RAND_MAX/10000); // Writer work simulation
         sem_post(arg->heap);
         pthread_mutex_lock(arg->mutex_rw);
         *arg->counter -= 1;
@@ -69,6 +65,7 @@ int main(int argc, char* argv[]){
     pthread_t writers[reader_number];
     pthread_t readers[writer_number];
     pthread_mutex_init(&mutex_rw, NULL);
+
     param_t *w_args = (param_t*)malloc(sizeof(param_t));
     if(!w_args) return EXIT_FAILURE;
     w_args->mutex_rw = &mutex_rw;
@@ -89,6 +86,9 @@ int main(int argc, char* argv[]){
     for(int i = 0; i< writer_number; i++)pthread_join(writers[i], NULL);
     for(int i = 0; i< reader_number; i++)pthread_join(readers[i], NULL);
     //garbage
+    printf("W: %d, R: %d\n", *w_args->iteration, *r_args->iteration);
+    free(w_args);
+    free(r_args);
     sem_destroy(&heap);
     sem_destroy(&blocker);
     pthread_mutex_destroy(&mutex_rw);

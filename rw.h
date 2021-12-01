@@ -11,7 +11,8 @@
 #include <semaphore.h>
 
 typedef struct param{
-
+    sem_t *heap, *blocker;
+    int *counter;
 }param_t;
 
 void reader(void* voidArg);

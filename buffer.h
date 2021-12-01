@@ -16,7 +16,7 @@
 
 
 typedef struct param{
-    int *number, *index, *counter;
+    int *index, *counter;
     int *buffer;
     sem_t *free_p, *new_elem_sig;
     pthread_mutex_t *mutex_buf, *mutex_pc;

@@ -31,7 +31,7 @@ do
     for _ in {1..5}
     do
       V=$((${I} + ${J}))
-      /usr/bin/time -o ${BUFFER_PATH} -a -f  "${V}, ${I}, ${J},  %e" make buffer P=${I} C=${J} -s
+      /usr/bin/time -o ${BUFFER_PATH} -a -f  "${V}, ${I}, ${J},  %e" make buffer P="${I}" C="${J}" -s
     done
   done
 done

@@ -25,6 +25,7 @@ int main(int argc, char* argv[]){
     *writer_access = 0;
     printf("R: %d -- W: %d\n", reader_number, writer_number); // TODO rm
     //TODO threading reader-writer problem
+
     //free all malloced variables
     free(writer_access);
     free(reader_access);

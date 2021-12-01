@@ -9,11 +9,12 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <stdbool.h>
 
 typedef struct param{
     sem_t *heap, *blocker;
     pthread_mutex_t *mutex_rw;
-    int *counter;
+    int *counter, *iteration;
 }param_t;
 
 void *reader(void* voidArg);

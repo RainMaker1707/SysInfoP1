@@ -12,10 +12,11 @@
 
 typedef struct param{
     sem_t *heap, *blocker;
+    pthread_mutex_t *mutex_rw;
     int *counter;
 }param_t;
 
-void reader(void* voidArg);
-void writer(void* voidArg);
+void *reader(void* voidArg);
+void *writer(void* voidArg);
 
 #endif //SYSINFOP1_RW_H

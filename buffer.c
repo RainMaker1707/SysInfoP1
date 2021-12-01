@@ -80,9 +80,7 @@ int main(int argc, char* argv[]){
     prod_param->new_elem_sig = &elem_sig;
     prod_param->mutex_buf = &buffer_m;
     prod_param->mutex_pc = &producer_m;
-    for(int i = 0; i < producer_number; i++){
-        pthread_create(&producers[i], NULL, &producer, (void*)prod_param);
-    }
+    for(int i = 0; i < producer_number; i++) pthread_create(&producers[i], NULL, &producer, (void*)prod_param);
 
     // init consumer param and threads
     param_t *cons_param = malloc(sizeof(param_t));
@@ -94,13 +92,13 @@ int main(int argc, char* argv[]){
     cons_param->new_elem_sig = &elem_sig;
     cons_param->mutex_buf = &buffer_m;
     cons_param->mutex_pc = &consumer_m;
-    for(int i = 0; i < consumer_number; i++){
-        pthread_create(&consumers[i], NULL, &consumer, (void*)cons_param);
-    }
+    for(int i = 0; i < consumer_number; i++) pthread_create(&consumers[i], NULL, &consumer, (void*)cons_param);
     // wait for all threads end
     for(int i = 0; i < producer_number; i++) pthread_join(producers[i], NULL);
     for(int i = 0; i < consumer_number; i++) pthread_join(consumers[i], NULL);
+    # ifdef DEBUG
     printf("prod: %d, cons %d", *prod_param->counter, *cons_param->counter);
+    # endif
     // garbage collect
     pthread_mutex_destroy(&buffer_m);
     pthread_mutex_destroy(&producer_m);

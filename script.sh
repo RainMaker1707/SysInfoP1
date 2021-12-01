@@ -24,9 +24,9 @@ done
 
 
 echo "Thread number, Producer number, Consumer number, compilation time" > ${BUFFER_PATH}
-for (( I=2; I<=CORE; I++))
+for (( I=1; I<=CORE; I++))
 do
-  for (( J=2; J<=CORE; J++))
+  for (( J=1; J<=CORE; J++))
   do
     for _ in {1..5}
     do
@@ -37,9 +37,9 @@ do
 done
 
 echo "Thread number, Write number, Reader number, Compilation time" > ${RW_PATH}
-for (( I=2; I<=CORE; I++))
+for (( I=1; I<=CORE; I++))
 do
-  for (( J=2; J<=CORE; J++))
+  for (( J=1; J<=CORE; J++))
   do
     for _ in {1..5}
     do

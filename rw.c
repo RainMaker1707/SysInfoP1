@@ -1,7 +1,7 @@
 #include "rw.h"
 
-#define NREAD 25
-#define NWRITE 6
+#define NREAD 2560
+#define NWRITE 640
 
 void *reader(void* voidArg){
     param_t* arg = (param_t*)voidArg;

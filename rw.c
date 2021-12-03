@@ -8,16 +8,19 @@ void *reader(void* voidArg){
     while(true){
         sem_wait(arg->blocker);
         pthread_mutex_lock(arg->mutex_rw);
-        *arg->counter += 1;
-        if(*arg->counter == 1) sem_wait(arg->heap); // first reader accesses
+            *arg->counter += 1;
+            if(*arg->counter == 1) sem_wait(arg->heap); // first reader accesses
         pthread_mutex_unlock(arg->mutex_rw);
+        sem_post(arg->blocker);
+
         if(*arg->iteration >= NREAD) return NULL;
         *arg->iteration += 1; // inc after because of reader work is outside the critical path
         //printf("Iteration Reader: %d\n", *arg->iteration);
-        sem_post(arg->blocker);
         while(rand() > RAND_MAX/10000); // reader work simulation
-        *arg->counter -= 1;
-        if(*arg->counter == 0) sem_post(arg->heap); // last reader leaves
+
+        pthread_mutex_lock(arg->mutex_rw);
+            *arg->counter -= 1;
+            if(*arg->counter == 0) sem_post(arg->heap); // last reader leaves
         pthread_mutex_unlock(arg->mutex_rw);
     }
 }
@@ -26,21 +29,23 @@ void *writer(void* voidArg){
     param_t* arg = (param_t*)voidArg;
     while(true){
         pthread_mutex_lock(arg->mutex_rw);
-        *arg->counter += 1;
-        if(*arg->counter == 1) sem_wait(arg->blocker);
+            *arg->counter += 1;
+            if(*arg->counter == 1) sem_wait(arg->blocker);
         pthread_mutex_unlock(arg->mutex_rw);
+
         sem_wait(arg->heap);
         //printf("Iteration writer: %d\n", *arg->iteration);
-        if(*arg->iteration >= NWRITE) {
-            sem_post(arg->heap);
-            return NULL;
-        }
-        *arg->iteration += 1;
-        while(rand() > RAND_MAX/10000); // Writer work simulation
+            if(*arg->iteration >= NWRITE) {
+                sem_post(arg->heap);
+                return NULL;
+            }
+            *arg->iteration += 1;
+            while(rand() > RAND_MAX/10000); // Writer work simulation
         sem_post(arg->heap);
+
         pthread_mutex_lock(arg->mutex_rw);
-        *arg->counter -= 1;
-        if(*arg->counter == 0) sem_post(arg->blocker); // leave access to reader
+            *arg->counter -= 1;
+            if(*arg->counter == 0) sem_post(arg->blocker); // leave access to reader
         pthread_mutex_unlock(arg->mutex_rw);
     }
 }
@@ -60,7 +65,7 @@ int main(int argc, char* argv[]){
     // mutex and semaphore
     sem_t heap, blocker;
     pthread_mutex_t mutex_rw;
-    sem_init(&heap, 0, 1);
+    sem_init(&heap, 1, 0);
     sem_init(&blocker, 0, 1);
     pthread_t writers[reader_number];
     pthread_t readers[writer_number];

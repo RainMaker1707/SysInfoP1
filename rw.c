@@ -13,7 +13,10 @@ void *reader(void* voidArg){
         pthread_mutex_unlock(arg->mutex_rw);
         sem_post(arg->blocker);
 
-        if(*arg->iteration >= NREAD) return NULL;
+        if(*arg->iteration >= NREAD) {
+            sem_post(arg->heap);
+            return NULL;
+        }
         *arg->iteration += 1; // inc after because of reader work is outside the critical path
         printf("Iteration Reader: %d\n", *arg->iteration);
         while(rand() > RAND_MAX/10000); // reader work simulation

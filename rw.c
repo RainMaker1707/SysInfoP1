@@ -18,7 +18,7 @@ void *reader(void* voidArg){
             return NULL;
         }
         *arg->iteration += 1; // inc after because of reader work is outside the critical path
-        printf("Iteration Reader: %d\n", *arg->iteration);
+        //printf("Iteration Reader: %d\n", *arg->iteration);
         while(rand() > RAND_MAX/10000); // reader work simulation
 
         pthread_mutex_lock(arg->mutex_rw);
@@ -37,7 +37,7 @@ void *writer(void* voidArg){
         pthread_mutex_unlock(arg->mutex_rw);
 
         sem_wait(arg->heap);
-        printf("Iteration writer: %d\n", *arg->iteration);
+        //printf("Iteration writer: %d\n", *arg->iteration);
             if(*arg->iteration >= NWRITE) {
                 sem_post(arg->blocker);
                 sem_post(arg->heap);
@@ -95,7 +95,7 @@ int main(int argc, char* argv[]){
     for(int i = 0; i< writer_number; i++)pthread_join(writers[i], NULL);
     for(int i = 0; i< reader_number; i++)pthread_join(readers[i], NULL);
     //garbage
-    printf("W: %d, R: %d\n", *w_args->iteration, *r_args->iteration);
+    //printf("W: %d, R: %d\n", *w_args->iteration, *r_args->iteration);
     free(w_args);
     free(r_args);
     sem_destroy(&heap);

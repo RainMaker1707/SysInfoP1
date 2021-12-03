@@ -1,7 +1,7 @@
 #include "rw.h"
 
-#define NREAD 2560
-#define NWRITE 640
+#define NREAD 25
+#define NWRITE 6
 
 void *reader(void* voidArg){
     param_t* arg = (param_t*)voidArg;
@@ -15,7 +15,7 @@ void *reader(void* voidArg){
 
         if(*arg->iteration >= NREAD) return NULL;
         *arg->iteration += 1; // inc after because of reader work is outside the critical path
-        //printf("Iteration Reader: %d\n", *arg->iteration);
+        printf("Iteration Reader: %d\n", *arg->iteration);
         while(rand() > RAND_MAX/10000); // reader work simulation
 
         pthread_mutex_lock(arg->mutex_rw);
@@ -34,7 +34,7 @@ void *writer(void* voidArg){
         pthread_mutex_unlock(arg->mutex_rw);
 
         sem_wait(arg->heap);
-        //printf("Iteration writer: %d\n", *arg->iteration);
+        printf("Iteration writer: %d\n", *arg->iteration);
             if(*arg->iteration >= NWRITE) {
                 sem_post(arg->heap);
                 return NULL;

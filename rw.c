@@ -36,6 +36,7 @@ void *writer(void* voidArg){
         sem_wait(arg->heap);
         printf("Iteration writer: %d\n", *arg->iteration);
             if(*arg->iteration >= NWRITE) {
+                sem_post(arg->blocker);
                 sem_post(arg->heap);
                 return NULL;
             }

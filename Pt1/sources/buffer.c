@@ -1,4 +1,4 @@
-#include "buffer.h"
+#include "../headers/buffer.h"
 #define SIZE 8
 #define TOTAL 1024
 

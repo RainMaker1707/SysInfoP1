@@ -1,4 +1,4 @@
-#include "philosophers.h"
+#include "../headers/philosophers.h"
 #define ITERATIONS 100000
 
 void eat(){

@@ -4,14 +4,14 @@
 # Choose of std option
 STD              = '-std=c99'
 # to compile files
-PHILO            = 'philosophers.c'
-BUFFER           = 'buffer.c'
-RW               = 'rw.c'
+PHILO            = 'Pt1/sources/philosophers.c'
+BUFFER           = 'Pt1/sources/buffer.c'
+RW               = 'Pt1/sources/rw.c'
 # executables name
 PHILO_EXEC       = 'philosophers'
 BUFFER_EXEC		 = 'buffer'
 RW_EXEC 		 = 'rw'
-# all build files go here
+# all built files go here
 DIR_NAME         = 'built'
 EXEC_PHILO_PATH  = 'built/philosophers'
 EXEC_BUFFER_PATH = 'built/buffer'

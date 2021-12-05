@@ -3,15 +3,19 @@
 #define NREAD 2560
 #define NWRITE 640
 
+pthread_mutex_t exclusive;
+
 void *reader(void* voidArg){
     param_t* arg = (param_t*)voidArg;
     while(true){
-        sem_wait(arg->blocker);
-        pthread_mutex_lock(arg->mutex_rw);
-            *arg->counter += 1;
-            if(*arg->counter == 1) sem_wait(arg->heap); // first reader accesses
-        pthread_mutex_unlock(arg->mutex_rw);
-        sem_post(arg->blocker);
+        pthread_mutex_lock(&exclusive);
+            sem_wait(arg->blocker);
+            pthread_mutex_lock(arg->mutex_rw);
+                *arg->counter += 1;
+                if(*arg->counter == 1) sem_wait(arg->heap); // first reader accesses
+            pthread_mutex_unlock(arg->mutex_rw);
+            sem_post(arg->blocker);
+        pthread_mutex_unlock(&exclusive);
 
         if(*arg->iteration >= NREAD) {
             sem_post(arg->heap);
@@ -69,11 +73,12 @@ int main(int argc, char* argv[]){
     // mutex and semaphore
     sem_t heap, blocker;
     pthread_mutex_t mutex_rw;
-    sem_init(&heap, 0, 1);
+    sem_init(&heap, 1, 0);
     sem_init(&blocker, 0, 1);
     pthread_t writers[reader_number];
     pthread_t readers[writer_number];
     pthread_mutex_init(&mutex_rw, NULL);
+    pthread_mutex_init(&exclusive, NULL);
 
     param_t *w_args = (param_t*)malloc(sizeof(param_t));
     if(!w_args) return EXIT_FAILURE;

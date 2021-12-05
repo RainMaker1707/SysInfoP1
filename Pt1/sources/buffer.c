@@ -7,20 +7,22 @@ void *producer(void* voidArg){
     param_t *arg = (param_t*) voidArg;
     while(true){
         while(rand() > RAND_MAX/10000);  // producer work simulation
+
         pthread_mutex_lock(arg->mutex_pc);
-        if(*arg->counter >= TOTAL){
-            pthread_mutex_unlock(arg->mutex_pc);
-            return NULL; // stop when total is reached
-        }
-        *arg->counter+=1;
+            if(*arg->counter >= TOTAL){
+                pthread_mutex_unlock(arg->mutex_pc);
+                return NULL; // stop when total is reached
+            }
+            *arg->counter+=1;
         pthread_mutex_unlock(arg->mutex_pc);
+
         elem = rand();// elem to add did it here to avoid rand() work int the sem lock
-        //printf("P: %d, ", elem);
         sem_wait(arg->free_p);  // producer waiting for a free place
-        pthread_mutex_lock(arg->mutex_buf);
-        *(arg->buffer  + *arg->index) = elem;
-        *arg->index = (*arg->index+1) % SIZE;  // index update for next insertion
-        pthread_mutex_unlock(arg->mutex_buf);
+            //printf("P: %d, ", *arg->counter);
+            pthread_mutex_lock(arg->mutex_buf);
+                *(arg->buffer  + *arg->index) = elem;
+                *arg->index = (*arg->index+1) % SIZE;  // index update for next insertion
+            pthread_mutex_unlock(arg->mutex_buf);
         sem_post(arg->new_elem_sig); // signal new elem
     }
 }
@@ -29,19 +31,21 @@ void *consumer(void* voidArg){
     int elem = 0;
     while(true){
         pthread_mutex_lock(arg->mutex_pc);
-        if(*arg->counter >= TOTAL){
-            pthread_mutex_unlock(arg->mutex_pc);
-            return NULL; // stop when total is reach
-        }
-        *arg->counter += 1;
+            if(*arg->counter >= TOTAL){
+                pthread_mutex_unlock(arg->mutex_pc);
+                return NULL; // stop when total is reach
+            }
+            *arg->counter += 1;
         pthread_mutex_unlock(arg->mutex_pc);
+
         sem_wait(arg->new_elem_sig); // for elem to read
-        pthread_mutex_lock(arg->mutex_buf);
-        //printf("C: %d, ", *(arg->buffer + *arg->index));
-        *(arg->buffer + *arg->index) = elem;
-        *arg->index =  (*arg->index+1) % SIZE; // index update for next consummation
-        pthread_mutex_unlock(arg->mutex_buf);
+            pthread_mutex_lock(arg->mutex_buf);
+                //printf("C: %d, ", *arg->counter);
+                *(arg->buffer + *arg->index) = elem;
+                *arg->index =  (*arg->index+1) % SIZE; // index update for next consummation
+            pthread_mutex_unlock(arg->mutex_buf);
         sem_post(arg->free_p);  // signal free place
+
         while(rand() > RAND_MAX/10000); //consumer work simulation
     }
 }
@@ -60,7 +64,7 @@ int main(int argc, char* argv[]){
     // semaphore and mutexes + init mutexes
     sem_t free_p, elem_sig;
     pthread_mutex_t buffer_m, producer_m, consumer_m;
-    sem_init(&free_p, 0, SIZE);
+    sem_init(&free_p, 0, 1);
     sem_init(&elem_sig, 0, 1);
     pthread_mutex_init(&buffer_m, NULL);
     pthread_mutex_init(&producer_m, NULL);
@@ -109,3 +113,4 @@ int main(int argc, char* argv[]){
     free(cons_param);
     return EXIT_SUCCESS;
 }
+

@@ -83,6 +83,7 @@ int main(int argc, char* argv[]){
     w_args->heap = &heap;
     w_args->iteration = &w_iter;
     for(int i = 0; i < writer_number; i++ ) pthread_create(&writers[i], NULL, &writer, (void*)w_args);
+
     param_t *r_args = (param_t*)malloc(sizeof(param_t));
     if(!r_args) return EXIT_FAILURE;
     r_args->mutex_rw = &mutex_rw;
@@ -96,10 +97,10 @@ int main(int argc, char* argv[]){
     for(int i = 0; i< reader_number; i++)pthread_join(readers[i], NULL);
     //garbage
     //printf("W: %d, R: %d\n", *w_args->iteration, *r_args->iteration);
-    free(w_args);
-    free(r_args);
     sem_destroy(&heap);
     sem_destroy(&blocker);
     pthread_mutex_destroy(&mutex_rw);
+    free(w_args);
+    free(r_args);
     return EXIT_SUCCESS;
 }

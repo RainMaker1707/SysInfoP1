@@ -73,7 +73,7 @@ int main(int argc, char* argv[]){
     // mutex and semaphore
     sem_t heap, blocker;
     pthread_mutex_t mutex_rw;
-    sem_init(&heap, 1, 0);
+    sem_init(&heap, 0, 1);
     sem_init(&blocker, 0, 1);
     pthread_t writers[reader_number];
     pthread_t readers[writer_number];

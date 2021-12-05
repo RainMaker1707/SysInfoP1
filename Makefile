@@ -7,15 +7,24 @@ STD              = '-std=c99'
 PHILO            = 'Pt1/sources/philosophers.c'
 BUFFER           = 'Pt1/sources/buffer.c'
 RW               = 'Pt1/sources/rw.c'
+CPHILO            = 'Pt2/sources/customPhilosophers.c'
+CBUFFER           = 'Pt2/sources/customBuffer.c'
+CRW               = 'Pté/sources/customRW.c'
 # executables name
 PHILO_EXEC       = 'philosophers'
 BUFFER_EXEC		 = 'buffer'
 RW_EXEC 		 = 'rw'
+CPHILO_EXEC      = 'customPhilosophers'
+CBUFFER_EXEC	 = 'customBuffer'
+CRW_EXEC 		 = 'custoMRW'
 # all built files go here
 DIR_NAME         = 'built'
 EXEC_PHILO_PATH  = 'built/philosophers'
 EXEC_BUFFER_PATH = 'built/buffer'
 EXEC_RW_PATH     = 'built/rw'
+EXEC_CPHILO_PATH  = 'built/customPhilosophers'
+EXEC_CBUFFER_PATH = 'built/customBuffer'
+EXEC_CRW_PATH     = 'built/customRW'
 # test if already built dir exist
 TEST             = `ls | grep $(DIR_NAME) | wc -w | xargs`
 DATA_TEST		 = `ls | grep csv | wc -l | xargs`
@@ -91,6 +100,27 @@ build_rw:
 	fi
 	-gcc $(RW) -o $(RW_EXEC) $(STD) -lpthread
 	-mv -f $(RW_EXEC) $(EXEC_RW_PATH)
+
+build_cphilo:
+	@if [ $(TEST) == 0 ];\
+	then mkdir $(DIR_NAME);\
+	fi
+	-gcc $(CPHILO) -o $(CPHILO_EXEC) $(STD) -lpthread
+	-mv -f $(CPHILO_EXEC) $(EXEC_CPHILO_PATH)
+
+build_cbuffer:
+	@if [ $(TEST) == 0 ];\
+	then mkdir $(DIR_NAME);\
+	fi
+	-gcc $(CBUFFER) -o $(CBUFFER_EXEC) $(STD) -lpthread
+	-mv -f $(CBUFFER_EXEC) $(EXEC_CBUFFER_PATH)
+
+build_crw:
+	@if [ $(TEST) == 0 ];\
+	then mkdir $(DIR_NAME);\
+	fi
+	-gcc $(CRW) -o $(CRW_EXEC) $(STD) -lpthread
+	-mv -f $(CRW_EXEC) $(EXEC_CRW_PATH)
 
 csv:
 	-./script.sh

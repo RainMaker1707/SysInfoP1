@@ -5,12 +5,12 @@ void lock_init(lock_t *mutex){
 }
 
 void lock(lock_t *mutex){
-    asm(    "REPEAT: movl $1, %%eax;" // define loop and move vlaue 1 in eax
+    asm(    "REPEAT: movl $1, %%eax;" // define loop and move value 1 in eax
             "xchgl %%eax, %0;" // exchange eax and mutex->state
             "testl %%eax, %%eax;" // make a condition test
             "jnz REPEAT;" // loop order
             :"=m"(mutex->state)
-            :"m"(mutex->state) //asign mutex state to 1
+            :"m"(mutex->state) //assign mutex state to 1
             :"%eax" // clean eax
             );
 }
@@ -19,7 +19,7 @@ void unlock(lock_t *mutex){
     asm(    "movl $0, %%eax;" //move value 0 in eax
             "xchgl %%eax, %0;" // exchange eax value and mutex->state
             :"=m"(mutex->state)
-            :"m"(mutex->state) //asign mutex state to 0
+            :"m"(mutex->state) //assign mutex state to 0
             :"%eax" // clean eax
             );
 }

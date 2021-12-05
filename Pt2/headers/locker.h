@@ -1,6 +1,8 @@
 #ifndef SYSINFOP1_LOCKER_H
 #define SYSINFOP1_LOCKER_H
 
+#include <stdbool.h>
+
 typedef struct locker{
     int state;
 }lock_t;

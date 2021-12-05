@@ -7,7 +7,7 @@
 
 typedef struct semaphore{
     unsigned int value;
-    lock_t mutex;
+    lock_t *mutex;
 }sem_t2;
 
 void sem_init_(sem_t2 *sem, unsigned int value);

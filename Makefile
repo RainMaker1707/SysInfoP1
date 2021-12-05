@@ -26,6 +26,8 @@ EXEC_CPHILO_PATH  = 'built/customPhilosophers'
 EXEC_CBUFFER_PATH = 'built/customBuffer'
 EXEC_CRW_PATH     = 'built/customRW'
 # test if already built dir exist
+LOCKER			 = 'Pt2/sources/locker.c'
+SEM  			 = 'Pt2/sources/semaphore.c'
 TEST             = `ls | grep $(DIR_NAME) | wc -w | xargs`
 DATA_TEST		 = `ls | grep csv | wc -l | xargs`
 
@@ -105,21 +107,21 @@ build_cphilo:
 	@if [ $(TEST) == 0 ];\
 	then mkdir $(DIR_NAME);\
 	fi
-	-gcc $(CPHILO) -o $(CPHILO_EXEC) $(STD) -lpthread
+	-gcc $(CPHILO) $(LOCKER) -o $(CPHILO_EXEC) -lpthread
 	-mv -f $(CPHILO_EXEC) $(EXEC_CPHILO_PATH)
 
 build_cbuffer:
 	@if [ $(TEST) == 0 ];\
 	then mkdir $(DIR_NAME);\
 	fi
-	-gcc $(CBUFFER) -o $(CBUFFER_EXEC) $(STD) -lpthread
+	-gcc $(CBUFFER) $(LOCKER) $(SEM) -o $(CBUFFER_EXEC) $(STD) -lpthread
 	-mv -f $(CBUFFER_EXEC) $(EXEC_CBUFFER_PATH)
 
 build_crw:
 	@if [ $(TEST) == 0 ];\
 	then mkdir $(DIR_NAME);\
 	fi
-	-gcc $(CRW) -o $(CRW_EXEC) $(STD) -lpthread
+	-gcc $(CRW) $(LOCKER) $(SEM) -o $(CRW_EXEC) $(STD) -lpthread
 	-mv -f $(CRW_EXEC) $(EXEC_CRW_PATH)
 
 csv:

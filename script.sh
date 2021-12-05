@@ -13,7 +13,7 @@ if [ $(ls | grep csv | wc -l | xargs) == 0 ]
 then mkdir csv
 fi
 
-echo "Thread number, compilation time" > ${PHILO_PATH}
+echo "Thread number, Compilation time" > ${PHILO_PATH}
 for (( I=2; I<=CORE*2; I++))
 do
   for _ in {1..5}
@@ -23,8 +23,8 @@ do
 done
 
 
-echo "Thread number, Producer number, Consumer number, compilation time" > ${BUFFER_PATH}
-for (( I=2; I<=CORE; I++))
+echo "Thread number, Producer number, Consumer number, Compilation time" > ${BUFFER_PATH}
+for (( I=1; I<=CORE; I++))
 do
   for (( J=1; J<=CORE; J++))
   do
@@ -37,9 +37,9 @@ do
 done
 
 echo "Thread number, Write number, Reader number, Compilation time" > ${RW_PATH}
-for (( I=2; I<=CORE; I++))
+for (( I=1; I<=CORE; I++))
 do
-  for (( J=2; J<=CORE; J++))
+  for (( J=1; J<=CORE; J++))
   do
     for _ in {1..5}
     do

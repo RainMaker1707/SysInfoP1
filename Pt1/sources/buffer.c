@@ -11,6 +11,7 @@ void *producer(void* voidArg){
         pthread_mutex_lock(arg->mutex_pc);
             if(*arg->counter >= TOTAL){
                 pthread_mutex_unlock(arg->mutex_pc);
+                sem_post(arg->new_elem_sig);
                 return NULL; // stop when total is reached
             }
             *arg->counter+=1;
@@ -33,6 +34,7 @@ void *consumer(void* voidArg){
         pthread_mutex_lock(arg->mutex_pc);
             if(*arg->counter >= TOTAL){
                 pthread_mutex_unlock(arg->mutex_pc);
+                sem_post(arg->free_p);
                 return NULL; // stop when total is reach
             }
             *arg->counter += 1;
@@ -64,8 +66,8 @@ int main(int argc, char* argv[]){
     // semaphore and mutexes + init mutexes
     sem_t free_p, elem_sig;
     pthread_mutex_t buffer_m, producer_m, consumer_m;
-    sem_init(&free_p, 0, 1);
-    sem_init(&elem_sig, 0, 1);
+    sem_init(&free_p, 0, SIZE);
+    sem_init(&elem_sig, 0, 0);
     pthread_mutex_init(&buffer_m, NULL);
     pthread_mutex_init(&producer_m, NULL);
     pthread_mutex_init(&consumer_m, NULL);

@@ -78,7 +78,6 @@ do
   done
 done
 
-"""
 echo "CSV RW custom"
 echo "Thread number, Writer number, Reader number, Compilation time" > ${CRW_PATH}
 for (( I=2; I<=CORE; I++))
@@ -92,5 +91,5 @@ do
     done
   done
 done
-"""
+
 make clean_build

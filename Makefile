@@ -89,7 +89,7 @@ clean_data:
 	then rm -r csv;\
 	fi
 
-build: build_philo build_buffer build_rw  build_cphilo build_cbuffer # build_crw
+build: build_philo build_buffer build_rw  build_cphilo build_cbuffer build_crw
 
 build_philo:
 	@if [ $(TEST) == 0 ];\

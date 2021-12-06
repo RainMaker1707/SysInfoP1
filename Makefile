@@ -9,7 +9,7 @@ BUFFER           = 'Pt1/sources/buffer.c'
 RW               = 'Pt1/sources/rw.c'
 CPHILO            = 'Pt2/sources/customPhilosophers.c'
 CBUFFER           = 'Pt2/sources/customBuffer.c'
-CRW               = 'Pté/sources/customRW.c'
+CRW               = 'Pt2/sources/customRW.c'
 # executables name
 PHILO_EXEC       = 'philosophers'
 BUFFER_EXEC		 = 'buffer'

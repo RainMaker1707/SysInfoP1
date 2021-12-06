@@ -2,16 +2,19 @@
 #define NREAD 2560
 #define NWRITE 640
 
+lock_t *exclusive;
 
 void *reader(void* voidArg){
     param_t* arg = (param_t*)voidArg;
     while(true){
-        sem_wait_(arg->blocker);
-            test_and_test_and_set_lock(arg->mutex_rw);
-                *arg->counter += 1;
-                if(*arg->counter == 1) sem_wait_(arg->heap); // first reader accesses
-            unlock(arg->mutex_rw);
-        sem_post_(arg->blocker);
+        test_and_test_and_set_lock(exclusive);
+            sem_wait_(arg->blocker);
+                test_and_test_and_set_lock(arg->mutex_rw);
+                    *arg->counter += 1;
+                    if(*arg->counter == 1) sem_wait_(arg->heap); // first reader accesses
+                unlock(arg->mutex_rw);
+            sem_post_(arg->blocker);
+        unlock(exclusive);
 
         if(*arg->iteration >= NREAD) {
             sem_post_(arg->heap);
@@ -70,12 +73,14 @@ int main(int argc, char* argv[]){
     sem_t2 *heap = (sem_t2*)malloc(sizeof(sem_t2));
     sem_t2 *blocker = (sem_t2*)malloc(sizeof(sem_t2));
     lock_t *mutex_rw = (lock_t*)malloc(sizeof(lock_t));
-    if(!(heap && blocker && mutex_rw)) return EXIT_FAILURE;
+    exclusive = (lock_t*)malloc(sizeof(lock_t));
+    if(!(heap && blocker && mutex_rw && exclusive)) return EXIT_FAILURE;
     sem_init_(heap, 1);
     sem_init_(blocker, 1);
     pthread_t writers[reader_number];
     pthread_t readers[writer_number];
     lock_init(mutex_rw);
+    lock_init(exclusive);
 
     param_t *w_args = (param_t*)malloc(sizeof(param_t));
     if(!w_args) return EXIT_FAILURE;

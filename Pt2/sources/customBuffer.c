@@ -9,21 +9,22 @@ void *producer(void* voidArg){
         while(rand() > RAND_MAX/10000);  // producer work simulation
 
         test_and_test_and_set_lock(arg->mutex_pc);
-        if(*arg->counter >= TOTAL){
-            unlock(arg->mutex_pc);
-            sem_post_(arg->new_elem_sig);
-            return NULL; // stop when total is reached
-        }
-        *arg->counter+=1;
+            if(*arg->counter >= TOTAL){
+                unlock(arg->mutex_pc);
+                sem_post_(arg->new_elem_sig);
+                return NULL; // stop when total is reached
+            }
+            *arg->counter+=1;
         unlock(arg->mutex_pc);
 
         elem = rand();// elem to add did it here to avoid rand() work int the sem lock
+
         sem_wait_(arg->free_p);  // producer waiting for a free place
         //printf("P: %d, ", *arg->counter);
-        test_and_test_and_set_lock(arg->mutex_buf);
-        *(arg->buffer  + *arg->index) = elem;
-        *arg->index = (*arg->index+1) % SIZE;  // index update for next insertion
-        unlock(arg->mutex_buf);
+            test_and_test_and_set_lock(arg->mutex_buf);
+                *(arg->buffer  + *arg->index) = elem;
+                *arg->index = (*arg->index+1) % SIZE;  // index update for next insertion
+            unlock(arg->mutex_buf);
         sem_post_(arg->new_elem_sig); // signal new elem
     }
 }
@@ -32,20 +33,20 @@ void *consumer(void* voidArg){
     int elem = 0;
     while(true){
         test_and_test_and_set_lock(arg->mutex_pc);
-        if(*arg->counter >= TOTAL){
-            unlock(arg->mutex_pc);
-            sem_post_(arg->free_p);
-            return NULL; // stop when total is reach
-        }
-        *arg->counter += 1;
+            if(*arg->counter >= TOTAL){
+                unlock(arg->mutex_pc);
+                sem_post_(arg->free_p);
+                return NULL; // stop when total is reach
+            }
+            *arg->counter += 1;
         unlock(arg->mutex_pc);
 
         sem_wait_(arg->new_elem_sig); // for elem to read
-        test_and_test_and_set_lock(arg->mutex_buf);
-        //printf("C: %d, ", *arg->counter);
-        *(arg->buffer + *arg->index) = elem;
-        *arg->index =  (*arg->index+1) % SIZE; // index update for next consummation
-        unlock(arg->mutex_buf);
+            test_and_test_and_set_lock(arg->mutex_buf);
+                //printf("C: %d, ", *arg->counter);
+                *(arg->buffer + *arg->index) = elem;
+                *arg->index =  (*arg->index+1) % SIZE; // index update for next consummation
+            unlock(arg->mutex_buf);
         sem_post_(arg->free_p);  // signal free place
 
         while(rand() > RAND_MAX/10000); //consumer work simulation

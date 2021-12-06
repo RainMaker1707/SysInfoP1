@@ -28,10 +28,10 @@ def plot_analysis(file):
 
 
 
-#plot_analysis('philo.csv')
-#plot_analysis('customPhilo.csv')
-plot_analysis('buffer.csv')
-plot_analysis('customBuffer.csv')
-#plot_analysis('rw.csv')
-#plot_analysis('customRW.csv')
+plot_analysis("../csv/philo.csv")
+plot_analysis('../csv/customPhilo.csv')
+plot_analysis('../csv/buffer.csv')
+plot_analysis('../csv/customBuffer.csv')
+plot_analysis('../csv/rw.csv')
+plot_analysis('../csv/customRW.csv')
 

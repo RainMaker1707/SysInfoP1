@@ -89,7 +89,7 @@ clean_data:
 	then rm -r csv;\
 	fi
 
-build: build_philo build_buffer build_rw  build_cphilo # build_cbuffer build_crw
+build: build_philo build_buffer build_rw  build_cphilo build_cbuffer # build_crw
 
 build_philo:
 	@if [ $(TEST) == 0 ];\
@@ -123,14 +123,14 @@ build_cbuffer:
 	@if [ $(TEST) == 0 ];\
 	then mkdir $(DIR_NAME);\
 	fi
-	-gcc $(CBUFFER) $(LOCKER) $(SEM) -o $(CBUFFER_EXEC) $(STD) -lpthread
+	-gcc $(CBUFFER) $(LOCKER) $(SEM) -o $(CBUFFER_EXEC) -lpthread
 	-mv -f $(CBUFFER_EXEC) $(EXEC_CBUFFER_PATH)
 
 build_crw:
 	@if [ $(TEST) == 0 ];\
 	then mkdir $(DIR_NAME);\
 	fi
-	-gcc $(CRW) $(LOCKER) $(SEM) -o $(CRW_EXEC) $(STD) -lpthread
+	-gcc $(CRW) $(LOCKER) $(SEM) -o $(CRW_EXEC) -lpthread
 	-mv -f $(CRW_EXEC) $(EXEC_CRW_PATH)
 
 csv:

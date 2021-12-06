@@ -16,6 +16,7 @@ if [ $(ls | grep csv | wc -l | xargs) == 0 ]
 then mkdir csv
 fi
 
+echo "CSV PHILO simple"
 echo "Thread number, Compilation time" > ${PHILO_PATH}
 for (( I=2; I<=CORE*2; I++))
 do
@@ -25,6 +26,7 @@ do
   done
 done
 
+echo "CSV PHILO custom"
 echo "Thread number, Compilation time" > ${CPHILO_PATH}
 for (( I=2; I<=CORE*2; I++))
 do
@@ -34,7 +36,7 @@ do
   done
 done
 
-
+echo "CSV BUFFER simple"
 echo "Thread number, Producer number, Consumer number, Compilation time" > ${BUFFER_PATH}
 for (( I=1; I<=CORE; I++))
 do
@@ -48,6 +50,7 @@ do
   done
 done
 
+echo "CSV BUFFER custom"
 echo "Thread number, Producer number, Consumer number, Compilation time" > ${BUFFER_PATH}
 for (( I=1; I<=CORE; I++))
 do
@@ -61,6 +64,7 @@ do
   done
 done
 
+echo "CSV RW simple"
 echo "Thread number, Writer number, Reader number, Compilation time" > ${RW_PATH}
 for (( I=2; I<=CORE; I++))
 do
@@ -74,4 +78,19 @@ do
   done
 done
 
+"""
+echo "CSV RW custom"
+echo "Thread number, Writer number, Reader number, Compilation time" > ${CRW_PATH}
+for (( I=2; I<=CORE; I++))
+do
+  for (( J=1; J<=CORE; J++))
+  do
+    for _ in {1..5}
+    do
+      V=$((${I} + ${J}))
+      /usr/bin/time -o ${CRW_PATH} -a -f  "${V}, ${I}, ${J}, %e" make crw W=${I} R=${J} -s
+    done
+  done
+done
+"""
 make clean_build

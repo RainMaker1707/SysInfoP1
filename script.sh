@@ -51,7 +51,7 @@ do
 done
 
 echo "CSV BUFFER custom"
-echo "Thread number, Producer number, Consumer number, Compilation time" > ${BUFFER_PATH}
+echo "Thread number, Producer number, Consumer number, Compilation time" > ${CBUFFER_PATH}
 for (( I=1; I<=CORE; I++))
 do
   for (( J=1; J<=CORE; J++))

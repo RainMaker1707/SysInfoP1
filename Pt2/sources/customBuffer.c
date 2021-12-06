@@ -11,7 +11,6 @@ void *producer(void* voidArg){
         test_and_test_and_set_lock(arg->mutex_pc);
             if(*arg->counter >= TOTAL){
                 unlock(arg->mutex_pc);
-                sem_post_(arg->new_elem_sig);
                 return NULL; // stop when total is reached
             }
             *arg->counter+=1;
@@ -35,7 +34,6 @@ void *consumer(void* voidArg){
         test_and_test_and_set_lock(arg->mutex_pc);
             if(*arg->counter >= TOTAL){
                 unlock(arg->mutex_pc);
-                sem_post_(arg->free_p);
                 return NULL; // stop when total is reach
             }
             *arg->counter += 1;
@@ -63,7 +61,8 @@ int main(int argc, char* argv[]){
     int buffer[SIZE];
     int producer_number = (int)strtol(argv[1], &argv[2] - 1, 10);
     int consumer_number = (int)strtol(argv[2], &argv[3] - 1, 10);
-    int produced, consumed, cons_index, prod_index = 0;
+    int produced, consumed, cons_index, prod_index;
+    produced = consumed = prod_index = cons_index = 0;
     // semaphore and mutexes + init mutexes
     sem_t2 *free_p = (sem_t2*)malloc(sizeof(sem_t2));
     sem_t2 *elem_sig = (sem_t2*)malloc(sizeof(sem_t2));

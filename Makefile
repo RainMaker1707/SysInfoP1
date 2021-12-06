@@ -68,6 +68,15 @@ buffer:
 rw:
 	-./$(EXEC_RW_PATH) $(W) $(R)
 
+cphilo:
+	-./$(EXEC_CPHILO_PATH) $(N)
+
+cbuffer:
+	-./$(EXEC_CBUFFER_PATH) $(P) $(C)
+
+crw:
+	-./$(EXEC_CRW_PATH) $(W) $(R)
+
 clean: clean_build clean_data
 
 clean_build:
@@ -80,7 +89,7 @@ clean_data:
 	then rm -r csv;\
 	fi
 
-build: build_philo build_buffer build_rw
+build: build_philo build_buffer build_rw  build_cphilo # build_cbuffer build_crw
 
 build_philo:
 	@if [ $(TEST) == 0 ];\

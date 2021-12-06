@@ -11,7 +11,6 @@ void *producer(void* voidArg){
         pthread_mutex_lock(arg->mutex_pc);
             if(*arg->counter >= TOTAL){
                 pthread_mutex_unlock(arg->mutex_pc);
-                sem_post(arg->new_elem_sig);
                 return NULL; // stop when total is reached
             }
             *arg->counter+=1;
@@ -19,7 +18,6 @@ void *producer(void* voidArg){
 
         elem = rand();// elem to add did it here to avoid rand() work int the sem lock
         sem_wait(arg->free_p);  // producer waiting for a free place
-            //printf("P: %d, ", *arg->counter);
             pthread_mutex_lock(arg->mutex_buf);
                 *(arg->buffer  + *arg->index) = elem;
                 *arg->index = (*arg->index+1) % SIZE;  // index update for next insertion
@@ -34,7 +32,6 @@ void *consumer(void* voidArg){
         pthread_mutex_lock(arg->mutex_pc);
             if(*arg->counter >= TOTAL){
                 pthread_mutex_unlock(arg->mutex_pc);
-                sem_post(arg->free_p);
                 return NULL; // stop when total is reach
             }
             *arg->counter += 1;
@@ -42,7 +39,6 @@ void *consumer(void* voidArg){
 
         sem_wait(arg->new_elem_sig); // for elem to read
             pthread_mutex_lock(arg->mutex_buf);
-                //printf("C: %d, ", *arg->counter);
                 *(arg->buffer + *arg->index) = elem;
                 *arg->index =  (*arg->index+1) % SIZE; // index update for next consummation
             pthread_mutex_unlock(arg->mutex_buf);
@@ -62,7 +58,8 @@ int main(int argc, char* argv[]){
     int buffer[SIZE];
     int producer_number = (int)strtol(argv[1], &argv[2] - 1, 10);
     int consumer_number = (int)strtol(argv[2], &argv[3] - 1, 10);
-    int produced, consumed, cons_index, prod_index = 0;
+    int produced, consumed, cons_index, prod_index;
+    produced = consumed = cons_index, prod_index = 0;
     // semaphore and mutexes + init mutexes
     sem_t free_p, elem_sig;
     pthread_mutex_t buffer_m, producer_m, consumer_m;

@@ -2,6 +2,7 @@
 # todo add '/usr' before the bin path to run on linux
 
 PHILO_PATH="csv/philo.csv"
+CPHILO_PATH="csv/customPhilo.csv"
 BUFFER_PATH="csv/buffer.csv"
 RW_PATH="csv/rw.csv"
 CORE=$(grep -c ^processor /proc/cpuinfo)
@@ -22,6 +23,15 @@ do
   done
 done
 
+echo "Thread number, Compilation time" > ${CPHILO_PATH}
+for (( I=2; I<=CORE*2; I++))
+do
+  for _ in {1..5}
+  do
+    /usr/bin/time -o ${CPHILO_PATH} -a -f  "${I}, %e" make cphilo N=${I} -s
+  done
+done
+
 
 echo "Thread number, Producer number, Consumer number, Compilation time" > ${BUFFER_PATH}
 for (( I=1; I<=CORE; I++))
@@ -36,7 +46,7 @@ do
   done
 done
 
-echo "Thread number, Write number, Reader number, Compilation time" > ${RW_PATH}
+echo "Thread number, Writer number, Reader number, Compilation time" > ${RW_PATH}
 for (( I=2; I<=CORE; I++))
 do
   for (( J=1; J<=CORE; J++))

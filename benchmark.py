@@ -17,7 +17,7 @@ def plot_analysis(file):
     ax.boxplot(ar_cmp_t, showfliers=True, autorange=True, patch_artist=True, meanline=True, showmeans=True, meanprops=meanlineprops)
     plt.xticks([x for x in range(1, 16)], [x for x in range(2, 17)])
     plt.xlabel("Thread Number")
-    plt.ylabel("Compilation Time (s)")
+    plt.ylabel("Execution Time (s)")
     plt.title(file[:-4].upper())
     plt.show()
 

@@ -18,7 +18,7 @@ if [ $(ls | grep csv | wc -l | xargs) == 0 ]
 then mkdir csv
 fi
 
-echo "CSV PHILO simple"
+# echo "CSV PHILO simple"
 echo "Thread number, Compilation time" > ${PHILO_PATH}
 for (( I=2; I<=CORE*2; I++))
 do
@@ -28,8 +28,8 @@ do
   done
 done
 
-echo "CSV PHILO custom"
-echo "Thread number, Compilation time" > ${CPHILO_PATH}
+# echo "CSV PHILO custom"
+echo "Thread number, Execution time" > ${CPHILO_PATH}
 for (( I=2; I<=CORE*2; I++))
 do
   for _ in {1..5}
@@ -38,8 +38,8 @@ do
   done
 done
 
-echo "CSV BUFFER simple"
-echo "Thread number, Producer number, Consumer number, Compilation time" > ${BUFFER_PATH}
+# echo "CSV BUFFER simple"
+echo "Thread number, Producer number, Consumer number, Execution time" > ${BUFFER_PATH}
 for (( I=1; I<=CORE; I++))
 do
   for (( J=1; J<=CORE; J++))
@@ -52,8 +52,8 @@ do
   done
 done
 
-echo "CSV BUFFER custom"
-echo "Thread number, Producer number, Consumer number, Compilation time" > ${CBUFFER_PATH}
+# echo "CSV BUFFER custom"
+echo "Thread number, Producer number, Consumer number, Execution time" > ${CBUFFER_PATH}
 for (( I=1; I<=CORE; I++))
 do
   for (( J=1; J<=CORE; J++))
@@ -66,8 +66,8 @@ do
   done
 done
 
-echo "CSV RW simple"
-echo "Thread number, Writer number, Reader number, Compilation time" > ${RW_PATH}
+# echo "CSV RW simple"
+echo "Thread number, Writer number, Reader number, Execution time" > ${RW_PATH}
 for (( I=2; I<=CORE; I++))
 do
   for (( J=1; J<=CORE; J++))
@@ -80,8 +80,8 @@ do
   done
 done
 
-echo "CSV RW custom"
-echo "Thread number, Writer number, Reader number, Compilation time" > ${CRW_PATH}
+# echo "CSV RW custom"
+echo "Thread number, Writer number, Reader number, Execution time" > ${CRW_PATH}
 for (( I=2; I<=CORE; I++))
 do
   for (( J=1; J<=CORE; J++))
@@ -94,8 +94,8 @@ do
   done
 done
 
-echo "CSV test_and_set"
-echo "Thread number, Compilation time" > ${TAS_PATH}
+# echo "CSV test_and_set"
+echo "Thread number, Execution time" > ${TAS_PATH}
 for(( I=1; I<=CORE*2; I++))
 do
   for _ in {1..5}
@@ -104,13 +104,13 @@ do
     done
 done
 
-echo "CSV test_and_test_and_set"
-echo "Thread number, Compilation time" > ${TTAS_PATH}
+# echo "CSV test_and_test_and_set"
+echo "Thread number, Execution time" > ${TTAS_PATH}
 for(( I=1; I<=CORE*2; I++))
 do
   for _ in {1..5}
     do
-      /usr/bin/time -o ${TTAS_PATH} -a -f  "${I}, %e" make tas T=${I} -s
+      /usr/bin/time -o ${TTAS_PATH} -a -f  "${I}, %e" make ttas T=${I} -s
     done
 done
 

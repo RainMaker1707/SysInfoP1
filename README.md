@@ -10,7 +10,7 @@
     - **make build_philo**: explicit
     - **make build_buffer**: explicit
     - **make build_rw**: explicit
-    - - **make build_cphilo**: explicit
+    - **make build_cphilo**: explicit
     - **make build_cbuffer**: explicit
     - **make build_crw**: explicit
 - **make run**: run all programs with default arguments

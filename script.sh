@@ -7,6 +7,8 @@ BUFFER_PATH="csv/buffer.csv"
 CBUFFER_PATH="csv/customBuffer.csv"
 RW_PATH="csv/rw.csv"
 CRW_PATH="csv/customRW.csv"
+TAS_PATH="csv/test_and_set.csv"
+TTAS_PATH="csv/test_and_test_and_set.csv"
 CORE=$(grep -c ^processor /proc/cpuinfo)
 
 make clean
@@ -90,6 +92,26 @@ do
       /usr/bin/time -o ${CRW_PATH} -a -f  "${V}, ${I}, ${J}, %e" make crw W=${I} R=${J} -s
     done
   done
+done
+
+echo "CSV test_and_set"
+echo "Thread number, Compilation time" > ${TAS_PATH}
+for(( I=1; I<=CORE*2; I++))
+do
+  for _ in {1..5}
+    do
+      /usr/bin/time -o ${TAS_PATH} -a -f  "${I}, %e" make tas T=${I} -s
+    done
+done
+
+echo "CSV test_and_test_and_set"
+echo "Thread number, Compilation time" > ${TTAS_PATH}
+for(( I=1; I<=CORE*2; I++))
+do
+  for _ in {1..5}
+    do
+      /usr/bin/time -o ${TTAS_PATH} -a -f  "${I}, %e" make tas T=${I} -s
+    done
 done
 
 make clean_build

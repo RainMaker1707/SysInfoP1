@@ -7,9 +7,13 @@ STD              = '-std=c99'
 PHILO            = 'Pt1/sources/philosophers.c'
 BUFFER           = 'Pt1/sources/buffer.c'
 RW               = 'Pt1/sources/rw.c'
-CPHILO            = 'Pt2/sources/customPhilosophers.c'
-CBUFFER           = 'Pt2/sources/customBuffer.c'
-CRW               = 'Pt2/sources/customRW.c'
+LOCKER			 = 'Pt2/sources/locker.c'
+SEM  			 = 'Pt2/sources/semaphore.c'
+CPHILO           = 'Pt2/sources/customPhilosophers.c'
+CBUFFER          = 'Pt2/sources/customBuffer.c'
+CRW              = 'Pt2/sources/customRW.c'
+TAS				 = 'Pt2/sources/test_and_set.c'
+TTAS			 = 'Pt2/sources/test_and_test_and_set.c'
 # executables name
 PHILO_EXEC       = 'philosophers'
 BUFFER_EXEC		 = 'buffer'
@@ -17,6 +21,8 @@ RW_EXEC 		 = 'rw'
 CPHILO_EXEC      = 'customPhilosophers'
 CBUFFER_EXEC	 = 'customBuffer'
 CRW_EXEC 		 = 'custoMRW'
+TAS_EXEC		 = 'test_and_set'
+TTAS_EXEC		 = 'test_and_test_and_set'
 # all built files go here
 DIR_NAME         = 'built'
 EXEC_PHILO_PATH  = 'built/philosophers'
@@ -25,9 +31,9 @@ EXEC_RW_PATH     = 'built/rw'
 EXEC_CPHILO_PATH  = 'built/customPhilosophers'
 EXEC_CBUFFER_PATH = 'built/customBuffer'
 EXEC_CRW_PATH     = 'built/customRW'
+EXEC_TAS_PATH	  = 'built/test_and_set'
+EXEC_TTAS_PATH    = 'built/test_and_test_and_set'
 # test if already built dir exist
-LOCKER			 = 'Pt2/sources/locker.c'
-SEM  			 = 'Pt2/sources/semaphore.c'
 TEST             = `ls | grep $(DIR_NAME) | wc -w | xargs`
 DATA_TEST		 = `ls | grep csv | wc -l | xargs`
 
@@ -40,6 +46,7 @@ C = 4 # number of consumers
 P = 2 # number of producers
 W = 2 # number of writers
 R = 4 # number of readers
+T = 1
 
 # -----------------------------------------------
 #                Parameters
@@ -77,6 +84,12 @@ cbuffer:
 crw:
 	-./$(EXEC_CRW_PATH) $(W) $(R)
 
+tas:
+	-./$(EXEC_TAS_PATH) $(T)
+
+ttas:
+	-./$(EXEC_TTAS_PATH) $(T)
+
 clean: clean_build clean_data
 
 clean_build:
@@ -89,7 +102,7 @@ clean_data:
 	then rm -r csv;\
 	fi
 
-build: build_philo build_buffer build_rw build_cphilo build_cbuffer build_crw
+build: build_philo build_buffer build_rw build_cphilo build_cbuffer build_crw build_tas build_ttas
 
 build_philo:
 	@if [ $(TEST) == 0 ];\
@@ -132,6 +145,20 @@ build_crw:
 	fi
 	-gcc $(CRW) $(LOCKER) $(SEM) -o $(CRW_EXEC) -lpthread
 	-mv -f $(CRW_EXEC) $(EXEC_CRW_PATH)
+
+build_tas:
+	@if [ $(TEST) == 0 ];\
+	then mkdir $(DIR_NAME);\
+	fi
+	-gcc $(TAS) $(LOCKER) -o $(TAS_EXEC) -lpthread
+	-mv -f $(TAS_EXEC) $(EXEC_TAS_PATH)
+
+build_ttas:
+	@if [ $(TEST) == 0 ];\
+	then mkdir $(DIR_NAME);\
+	fi
+	-gcc $(TTAS) $(LOCKER) -o $(TTAS_EXEC) -lpthread
+	-mv -f $(TTAS_EXEC) $(EXEC_TTAS_PATH)
 
 csv:
 	-./script.sh

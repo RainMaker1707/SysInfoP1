@@ -31,5 +31,5 @@ def plot_analysis(file):
 if __name__ == "__main__":
     files = ["philo.csv", "customPhilo.csv", "buffer.csv", "customBuffer.csv", "rw.csv", "customRW.csv"]
     for file in files:
-        plot_analysis(f'../csv/{file}')
+        plot_analysis(f'csv/{file}')
 

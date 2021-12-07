@@ -57,7 +57,7 @@ SHELL := /bin/bash
 
 all: clean build csv benchmark # default 'make' command with defaults arguments
 
-run: philo buffer rw
+run: philo buffer rw cphilo cbuffer crw
 
 philo:
 	-./$(EXEC_PHILO_PATH) $(N)
@@ -89,7 +89,7 @@ clean_data:
 	then rm -r csv;\
 	fi
 
-build: build_philo build_buffer build_rw  build_cphilo build_cbuffer build_crw
+build: build_philo build_buffer build_rw build_cphilo build_cbuffer build_crw
 
 build_philo:
 	@if [ $(TEST) == 0 ];\
@@ -137,6 +137,6 @@ csv:
 	-./script.sh
 
 benchmark:
-	-echo 'incoming soon!'
+	-python3 benchmark.py
 
 

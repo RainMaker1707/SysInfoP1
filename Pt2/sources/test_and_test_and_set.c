@@ -26,6 +26,7 @@ int main(int argc, char *argv[]){
     int round = TOTAL/thread_number;
     lock_v = (lock_t*)malloc(sizeof(lock_t));
     if(!lock_v) return EXIT_FAILURE;
+    lock_init(lock_v);
 
     for(int i=0; i < thread_number; i++) {
         if(i == thread_number-1) round += TOTAL % thread_number;

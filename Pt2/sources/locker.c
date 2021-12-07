@@ -34,7 +34,7 @@ void test_and_test_and_set_lock(lock_t *mutex){
                 :"m"(mutex->state)
                 :"%eax" // clean eax
                 );
-        if(eax_val == 0) break; // if eax_val is 0 old(mutex->state) was 1 then we locked it.
+        if(eax_val == 0) break; // if eax_val is 0 old(mutex->state) was 0 then we locked it.
         while(mutex->state == 1); // waiting for state == 0
     }
 }

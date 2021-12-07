@@ -12,6 +12,7 @@ def plot_analysis(file):
 
     fig, ax = plt.subplots(figsize=(14,8))
     meanlineprops = dict(linestyle='-', linewidth=2.0, color='red')
+    medianlineprops = dict(linestyle='--', linewidth=1.5, color='cyan')
     #ax.violinplot(ar_cmp_t)
     ax.boxplot(ar_cmp_t, showfliers=True, autorange=True, patch_artist=True, meanline=True, showmeans=True, meanprops=meanlineprops)
     plt.xticks([x for x in range(1, 16)], [x for x in range(2,17)])
@@ -28,10 +29,10 @@ def plot_analysis(file):
 
 
 
-plot_analysis("../csv/philo.csv")
-plot_analysis('../csv/customPhilo.csv')
+#plot_analysis("../csv/philo.csv")
+#plot_analysis('../csv/customPhilo.csv')
 plot_analysis('../csv/buffer.csv')
 plot_analysis('../csv/customBuffer.csv')
-plot_analysis('../csv/rw.csv')
-plot_analysis('../csv/customRW.csv')
+#plot_analysis('../csv/rw.csv')
+#plot_analysis('../csv/customRW.csv')
 

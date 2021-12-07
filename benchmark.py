@@ -10,12 +10,12 @@ def plot_analysis(file):
 
     ar_cmp_t = [comp_time_by_th_nb[x][comp_time_by_th_nb[x].columns[-1]] for x in range(len(comp_time_by_th_nb))]
 
-    fig, ax = plt.subplots(figsize=(14,8))
+    fig, ax = plt.subplots(figsize=(14, 8))
     meanlineprops = dict(linestyle='-', linewidth=2.0, color='red')
     medianlineprops = dict(linestyle='--', linewidth=1.5, color='cyan')
     #ax.violinplot(ar_cmp_t)
     ax.boxplot(ar_cmp_t, showfliers=True, autorange=True, patch_artist=True, meanline=True, showmeans=True, meanprops=meanlineprops)
-    plt.xticks([x for x in range(1, 16)], [x for x in range(2,17)])
+    plt.xticks([x for x in range(1, 16)], [x for x in range(2, 17)])
     plt.xlabel("Thread Number")
     plt.ylabel("Compilation Time")
     plt.title(file[:-4].upper())
@@ -28,11 +28,8 @@ def plot_analysis(file):
     print("Ecarts types respectifs: \n", std_dev)
 
 
-
-#plot_analysis("../csv/philo.csv")
-#plot_analysis('../csv/customPhilo.csv')
-plot_analysis('../csv/buffer.csv')
-plot_analysis('../csv/customBuffer.csv')
-#plot_analysis('../csv/rw.csv')
-#plot_analysis('../csv/customRW.csv')
+if __name__ == "__main__":
+    files = ["philo.csv", "customPhilo.csv", "buffer.csv", "customBuffer.csv", "rw.csv", "customRW.csv"]
+    for file in files:
+        plot_analysis(f'../csv/{file}')
 
